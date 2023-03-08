@@ -3,11 +3,13 @@ package com.minggu4.sensor;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -75,12 +77,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         switch (sensorType) {
             case Sensor.TYPE_LIGHT:
-                textLight.setText(String.format("Light Sensor: 1$.2f", currentValue)
-                );
+                textLight.setText(String.format("Light Sensor: 1$.2f", currentValue));
+                changeBackground(currentValue);
                 break;
             case Sensor.TYPE_PROXIMITY:
-                textProx.setText(String.format("Proximity Sensor: 1$.2f", currentValue)
-                );
+                textProx.setText(String.format("Proximity Sensor: 1$.2f", currentValue));
                 break;
         }
     }
@@ -88,5 +89,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
         //
+    }
+
+    private void changeBackground(float currentValue) {
+        LinearLayout layout = findViewById(R.id.main_layout);
+        if (currentValue <= 150 && currentValue >= 100) {
+            layout.setBackgroundColor(Color.BLUE);
+        } else if (currentValue < 100 && currentValue >= 0) {
+            layout.setBackgroundColor(Color.RED);
+        }
     }
 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pertemuan 4 -Sensor</string>
+    <string name="text_light">Light Sensor : %1$.2f</string>
+    <string name="text_proximity">Proximity Sensor : %1$.2f</string>
 </resources>
