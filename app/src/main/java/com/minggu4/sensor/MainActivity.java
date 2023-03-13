@@ -2,6 +2,7 @@ package com.minggu4.sensor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor sensorProximity;
 
     private TextView textLight;
-    private TextView textProx;
+    private TextView textProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorText.setText(stringBuilder);
 
         textLight = findViewById(R.id.theText2);
-        textProx = findViewById(R.id.theText3);
-        String sensor_error = "no sensor";
+        textProxy = findViewById(R.id.theText3);
+        String sensor_error = "No Sensor";
 
         sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textLight.setText(sensor_error);
         }
         if (sensorProximity == null) {
-            textProx.setText(sensor_error);
+            textProxy.setText(sensor_error);
         }
     }
 
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager.unregisterListener(this);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         int sensorType = sensorEvent.sensor.getType();
@@ -77,26 +79,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         switch (sensorType) {
             case Sensor.TYPE_LIGHT:
-                textLight.setText(String.format("Light Sensor: 1$.2f", currentValue));
-                changeBackground(currentValue);
+                textLight.setText(String.format("Light Sensor: %1$.2f", currentValue));
+                changeFirstBackground(currentValue);
+                changeSecondBackground(currentValue);
                 break;
             case Sensor.TYPE_PROXIMITY:
-                textProx.setText(String.format("Proximity Sensor: 1$.2f", currentValue));
+                textProxy.setText(String.format("Proximity Sensor: %1$.2f", currentValue));
                 break;
+            default:
         }
+    }
+
+    private void changeFirstBackground(float currentValue) {
+        LinearLayout layout = findViewById(R.id.main_layout);
+        if (currentValue > 5.00) layout.setBackgroundColor(Color.RED);
+        else if (currentValue <= 5.00) layout.setBackgroundColor(Color.BLUE);
+    }
+    private void changeSecondBackground(float currentValue) {
+        LinearLayout layout = findViewById(R.id.second_layout);
+        if (currentValue > 5.00) layout.setBackgroundColor(Color.BLUE);
+        else if (currentValue <= 5.00) layout.setBackgroundColor(Color.RED);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
         //
-    }
-
-    private void changeBackground(float currentValue) {
-        LinearLayout layout = findViewById(R.id.main_layout);
-        if (currentValue <= 150 && currentValue >= 100) {
-            layout.setBackgroundColor(Color.BLUE);
-        } else if (currentValue < 100 && currentValue >= 0) {
-            layout.setBackgroundColor(Color.RED);
-        }
     }
 }
